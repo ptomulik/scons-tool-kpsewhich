@@ -36,7 +36,7 @@ Find all occurrences of ``unicode.sty`` file in TDS::
 
 Other functions (correspond directly to ``kpsewhich`` function options):: 
 
-    texmf = env.KPSExpandBraces('a{b:c}d')# kpsewhich -expand-braces 'a{b,c}d'
+    texmf = env.KPSExpandBraces('a{b,c}d')# kpsewhich -expand-braces 'a{b,c}d'
     texmf = env.KPSExpandPath('$TEXMF')   # kpsewhich -expand-path '$TEXMF'
     texmf = env.KPSExpandVar('$TEXMF')    # kpsewhich -expand-var '$TEXMF'
     texpath = env.KPSShowPath('tex')      # kpsewhich -show-path 'tex'
@@ -47,8 +47,8 @@ Other functions (correspond directly to ``kpsewhich`` function options)::
 CONSTRUCTION VARIABLES
 ``````````````````````
 
-The following construction variables may be used to configure the ``DVIPDFM``
-builder:
+The following construction variables may be used to configure the ``kpsewhich``
+tool. They may be also provided as keyword arguments to ``KPSXxx()`` methods.
 
 ============================== ==============================================
         Variable                                Description
@@ -57,7 +57,7 @@ builder:
 ------------------------------ ----------------------------------------------
  ``KPSEWHICHFLAGS``               additional flags to ``kpsewhich``
 ------------------------------ ----------------------------------------------
- ``KPSVARIABLES``                 (re)define variables seen by ``kpsewhich``
+ ``KPSVARIABLES``                 (re)define variables for ``kpsewhich``
 ============================== ==============================================
 
 ``KPSVARIABLES`` must be a dictionary in form ``{ NAME : VALUE }``, 
@@ -68,7 +68,7 @@ for example::
 ARGUMENTS
 `````````
 
-These arguments are accepted by some ``KPSXxx`` methods. All the methods accept
+These arguments are accepted by some ``KPSXxx()`` methods. All the methods accept
 ``progname``. All other arguments are accepted by ``KPSFindFiles`` and
 ``KPSFindAllFiles``.
 
