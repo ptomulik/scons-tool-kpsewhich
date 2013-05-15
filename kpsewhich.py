@@ -76,7 +76,6 @@ def _kpsewhich(env, args, allowed = _missing, **kw):
     cmd = SCons.Util.CLVar(env.subst('$KPSEWHICH')) \
         + SCons.Util.CLVar(env.subst('$KPSEWHICHFLAGS')) \
         + flags + SCons.Util.CLVar(args)
-    print cmd 
     return subprocess.check_output(cmd, **kw2).rstrip('\r\n')
 
 def KPSFindFiles(env, files, **kw):
