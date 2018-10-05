@@ -10,17 +10,17 @@ selection method.
 #
 # Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 The SCons Foundation
 # Copyright (c) 2013 by Pawel Tomulik <ptomulik@meil.pw.edu.pl>
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -45,10 +45,10 @@ def _kwargs2flags(env, allowed = _missing, **kw):
 
     if allowed is _missing:
         # All the flags from _argnames are allowed
-        args = filter(lambda x : x in kw, _argnames)
+        args = [x for x in _argnames if x in kw]
     else:
         # Only some flags are allowed
-        args =  filter(lambda x : x in allowed and x in kw, _argnames)
+        args = [x for x in _argnames if x in allowed and x in kw]
 
     for arg in args:
         f = "-%s" % str(arg).replace('_','-')
@@ -64,7 +64,7 @@ def _kpsewhich(env, args, allowed = _missing, **kw):
 
     env = env.Override(kw)
 
-    flags = _kwargs2flags(env,allowed, **kw)
+    flags = _kwargs2flags(env, allowed, **kw)
 
     kw2 = {}
     try: ENV = env['ENV']
@@ -72,7 +72,7 @@ def _kpsewhich(env, args, allowed = _missing, **kw):
     try: ENV.update(env['KPSVARIABLES'])
     except KeyError: pass
     if ENV: kw2['env'] = ENV
-    
+
     cmd = SCons.Util.CLVar(env.subst('$KPSEWHICH')) \
         + SCons.Util.CLVar(env.subst('$KPSEWHICHFLAGS')) \
         + flags + SCons.Util.CLVar(args)
@@ -83,7 +83,7 @@ def KPSFindFiles(env, files, **kw):
 
     The keyword parameters correspond to the options of ``kpsewhich`` program.
     See ``kpsewhich`` manual and `kpathsea`_ documentation.
-    
+
     Note: in addition to parameters mentioned below, the method also accepts
     construction variables ``KPSEWHICH``, ``KPSEWHICHFLAGS``, ``KPSVARIABLES``.
 
@@ -93,7 +93,7 @@ def KPSFindFiles(env, files, **kw):
             the SCons Environment object,
         files
             the list of file names (strings)
-        
+
     :Keywords:
 
         dpi
@@ -132,7 +132,7 @@ def KPSExpandBraces(env, string, **kw):
 
     Note: in addition to parameters mentioned below, the method also accepts
     construction variables ``KPSEWHICH``, ``KPSEWHICHFLAGS``, ``KPSVARIABLES``.
-    
+
     :Parameters:
         env
             the SCons Environment object,
@@ -141,14 +141,14 @@ def KPSExpandBraces(env, string, **kw):
     :Keywords:
         progname
             set program name (e.g. latex, jadetex, etc.)
-    :Returns: 
+    :Returns:
         the expanded ``string``
     """
     return _kpsewhich(env, ['-expand-braces', string], ['progname'], **kw)
-    
+
 def KPSExpandPath(env, string, **kw):
     """Return complete path expansion of string from ``kpsewhich`` program
-    
+
     This function simply returns the output of ``kpsewhich ... -expand-path
     <string>`` command.
 
@@ -163,14 +163,14 @@ def KPSExpandPath(env, string, **kw):
     :Keywords:
         progname
             set program name (e.g. latex, jadetex, etc.)
-    :Returns: 
+    :Returns:
         the expanded ``string``
     """
     return _kpsewhich(env, ['-expand-path', string], ['progname'], **kw)
 
 def KPSExpandVar(env, string, **kw):
     """Return variable expansion of string from ``kpsewhich`` program
-    
+
     This function simply returns the output of ``kpsewhich ... -expand-var
     <string>`` command.
 
@@ -185,11 +185,11 @@ def KPSExpandVar(env, string, **kw):
     :Keywords:
         progname
             set program name (e.g. latex, jadetex, etc.)
-    :Returns: 
+    :Returns:
         the expanded ``string``
     """
     return _kpsewhich(env, ['-expand-var', string], ['progname'],**kw)
-    
+
 def KPSShowPath(env, ftype, **kw):
     """Return search path for given file type from ``kpsewhich`` program
 
@@ -198,7 +198,7 @@ def KPSShowPath(env, ftype, **kw):
 
     Note: in addition to parameters mentioned below, the method also accepts
     construction variables ``KPSEWHICH``, ``KPSEWHICHFLAGS``, ``KPSVARIABLES``.
-    
+
     :Parameters:
         env
             the SCons Environment object,
@@ -207,7 +207,7 @@ def KPSShowPath(env, ftype, **kw):
     :Keywords:
         progname
             set program name (e.g. latex, jadetex, etc.)
-    :Returns: 
+    :Returns:
         the expanded ``string``
     """
     return _kpsewhich(env, ['-show-path', ftype], ['progname'], **kw)
@@ -220,7 +220,7 @@ def KPSVarValue(env, varname, **kw):
 
     Note: in addition to parameters mentioned below, the method also accepts
     construction variables ``KPSEWHICH``, ``KPSEWHICHFLAGS``, ``KPSVARIABLES``.
-    
+
     :Parameters:
         env
             the SCons Environment object,
@@ -229,7 +229,7 @@ def KPSVarValue(env, varname, **kw):
     :Keywords:
         progname
             set program name (e.g. latex, jadetex, etc.)
-    :Returns: 
+    :Returns:
         the expanded ``string``
     """
     return _kpsewhich(env, ['-var-value', varname], ['progname'],**kw)
@@ -242,7 +242,7 @@ def generate(env):
     import SCons.Util
     global _KPSGenerated
     if _KPSGenerated: return
-    
+
     kpsewhich = env.Detect(['kpsewhich'])
     if not kpsewhich: kpsewhich = 'kpsewhich'
 
