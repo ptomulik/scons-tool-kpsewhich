@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013 by Pawel Tomulik
+# Copyright (c) 2013 by Pawel Tomulik <ptomulik@meil.pw.edu.pl>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,17 +19,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-Import(['env'])
+import os
+env = Environment(ENV = os.environ, tools = ['kpsewhich'])
+result = env.KPSFindFiles(['foo.cls', 'bar.sty'],  path='./share/texmf/tex///')
 
-if 'user-doc' in COMMAND_LINE_TARGETS:
-    env.Tool('docbook')
-    pdf = env.DocbookPdf('manual')
-    html = env.DocbookHtml('manual')
-
-    env.Ignore('.', pdf + html)
-
-    env.Alias( 'user-doc', pdf + html )
-    env.AlwaysBuild( 'user-doc' )
+with open('stdout.txt','w') as f:
+    f.write('\n'.join(result))
 
 # Local Variables:
 # # tab-width:4

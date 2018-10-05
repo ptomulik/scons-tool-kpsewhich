@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013 by Pawel Tomulik
+# Copyright (c) 2013 by Pawel Tomulik <ptomulik@meil.pw.edu.pl>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,20 +19,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-Import(['env'])
+__docformat__ = "restructuredText"
 
-if 'user-doc' in COMMAND_LINE_TARGETS:
-    env.Tool('docbook')
-    pdf = env.DocbookPdf('manual')
-    html = env.DocbookHtml('manual')
+"""
+TODO: Write documentation
+"""
 
-    env.Ignore('.', pdf + html)
+import TestSCons
 
-    env.Alias( 'user-doc', pdf + html )
-    env.AlwaysBuild( 'user-doc' )
+test = TestSCons.TestSCons()
+
+test.dir_fixture('image')
+test.dir_fixture('share', 'share')
+test.dir_fixture('../../../../kpsewhich', 'site_scons/site_tools/kpsewhich')
+
+# Normal invocation
+test.run()
+test.must_exist(test.workpath('stdout.txt'))
+test.must_contain(test.workpath('stdout.txt'),'./share/texmf/tex/latex/local/foo.cls', 'rt')
+test.must_contain(test.workpath('stdout.txt'),'./share/texmf/tex/latex/local/bar.sty', 'rt')
+test.must_not_contain(test.workpath('stdout.txt'),'./share/texmf/tex/amstex/local/foo.cls', 'rt')
+test.must_not_contain(test.workpath('stdout.txt'),'./share/texmf/tex/amstex/local/bar.sty', 'rt')
 
 # Local Variables:
 # # tab-width:4
 # # indent-tabs-mode:nil
 # # End:
-# vim: set syntax=scons expandtab tabstop=4 shiftwidth=4:
+# vim: set syntax=python expandtab tabstop=4 shiftwidth=4:

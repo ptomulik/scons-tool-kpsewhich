@@ -71,12 +71,27 @@ def _kpsewhich(env, args, allowed = _missing, **kw):
     except KeyError: ENV = {}
     try: ENV.update(env['KPSVARIABLES'])
     except KeyError: pass
+
+    # Workaround for kpsewhich bug - first file is not found when -path is
+    # used, this is due to recursive use of non-reentrant functions withing
+    # the kpathsea library.
+    if kw.get('_findfiles'):
+        ENV['_KPS_VV_WKND_'] = "$_KPS_VV_WKND_VALUE"
+        prepend = SCons.Util.CLVar(['-var-value', '_KPS_VV_WKND_'])
+    else:
+        prepend = SCons.Util.CLVar([])
+
     if ENV: kw2['env'] = ENV
 
     cmd = SCons.Util.CLVar(env.subst('$KPSEWHICH')) \
         + SCons.Util.CLVar(env.subst('$KPSEWHICHFLAGS')) \
-        + flags + SCons.Util.CLVar(args)
-    return subprocess.check_output(cmd, **kw2).rstrip('\r\n')
+        + prepend + flags + SCons.Util.CLVar(args)
+
+    out = subprocess.check_output(cmd, **kw2).rstrip('\r\n')
+
+    if kw.get('_findfiles'):
+        out = "\n".join(out.splitlines()[1:])
+    return out
 
 def KPSFindFiles(env, files, **kw):
     """Find files using ``kpsewhich`` program.
@@ -113,7 +128,7 @@ def KPSFindFiles(env, files, **kw):
 
     .. _kpathsea: http://tug.org/texinfohtml/kpathsea.html
     """
-    output = _kpsewhich(env, files, **kw)
+    output = _kpsewhich(env, files, _findfiles=True, **kw)
     result = output.splitlines()
     return result
 
@@ -121,7 +136,7 @@ def KPSFindAllFiles(env, files, **kw):
     """Find files as in `KPSFindFiles` but with ``-all`` command-line flag."""
     import SCons.Util
     args = SCons.Util.CLVar('-all') + SCons.Util.CLVar(files)
-    output = _kpsewhich(env, args, **kw)
+    output = _kpsewhich(env, args, _findfiles=True, **kw)
     result = output.splitlines()
     return result
 

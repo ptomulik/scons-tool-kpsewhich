@@ -30,7 +30,7 @@ BUILDING
 ^^^^^^^^
 
 To build user manual type::
-  
+
     scons -u user-doc
 
 Resulting document will be written to files under ``#build/doc/user/``.
