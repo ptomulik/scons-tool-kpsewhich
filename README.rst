@@ -17,7 +17,7 @@ information from external program.
 INSTALLATION
 ------------
 
-Copy the ``kpathsea.py`` file to your project's ``site_scons/site_tools/``
+Copy the ``kpsewhich`` directory to your project's ``site_scons/site_tools/``
 (per-project installation) or to ``~/.scons/site_scons/site_tools/`` (per user
 installation). See SCons manual for details about installation of tools.
 

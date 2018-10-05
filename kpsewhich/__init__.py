@@ -119,7 +119,9 @@ def KPSFindFiles(env, files, **kw):
 
 def KPSFindAllFiles(env, files, **kw):
     """Find files as in `KPSFindFiles` but with ``-all`` command-line flag."""
-    output = _kpsewhich(env, files, **kw)
+    import SCons.Util
+    args = SCons.Util.CLVar('-all') + SCons.Util.CLVar(files)
+    output = _kpsewhich(env, args, **kw)
     result = output.splitlines()
     return result
 
