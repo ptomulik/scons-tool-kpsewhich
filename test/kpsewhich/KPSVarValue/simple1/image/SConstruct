@@ -21,16 +21,14 @@
 
 env = Environment(tools = ['tex', 'kpsewhich'])
 
-f = open('stdout.txt','w')
-
 result = [
     env.KPSVarValue('TEXMFHOME', KPSVARIABLES = {'TEXMFHOME' : '/T1/OK'}),
     env.KPSVarValue('TEXMFHOME', KPSVARIABLES = {'TEXMFHOME_latex' : '/T2/OK'},
                     progname = '$LATEX')
 ]
-f.write('\n'.join(result))
 
-f.close()
+with open('stdout.txt','w') as f:
+    f.write('\n'.join(result))
 
 # Local Variables:
 # # tab-width:4

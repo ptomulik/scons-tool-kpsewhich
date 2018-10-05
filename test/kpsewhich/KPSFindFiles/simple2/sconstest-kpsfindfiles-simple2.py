@@ -30,12 +30,16 @@ import TestSCons
 test = TestSCons.TestSCons()
 
 test.dir_fixture('image')
+test.dir_fixture('share', 'share')
 test.dir_fixture('../../../../kpsewhich', 'site_scons/site_tools/kpsewhich')
 
 # Normal invocation
 test.run()
 test.must_exist(test.workpath('stdout.txt'))
-test.must_contain(test.workpath('stdout.txt'),'article.cls')
+test.must_contain(test.workpath('stdout.txt'),'./share/texmf/tex/latex/local/foo.cls', 'rt')
+test.must_contain(test.workpath('stdout.txt'),'./share/texmf/tex/latex/local/bar.sty', 'rt')
+test.must_not_contain(test.workpath('stdout.txt'),'./share/texmf/tex/amstex/local/foo.cls', 'rt')
+test.must_not_contain(test.workpath('stdout.txt'),'./share/texmf/tex/amstex/local/bar.sty', 'rt')
 
 # Local Variables:
 # # tab-width:4

@@ -19,26 +19,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-__docformat__ = "restructuredText"
+import os
+env = Environment(ENV = os.environ, tools = ['kpsewhich'])
+result = env.KPSFindAllFiles('article.cls')
 
-"""
-TODO: Write documentation
-"""
-
-import TestSCons
-
-test = TestSCons.TestSCons()
-
-test.dir_fixture('image')
-test.dir_fixture('../../../../kpsewhich', 'site_scons/site_tools/kpsewhich')
-
-# Normal invocation
-test.run()
-test.must_exist(test.workpath('stdout.txt'))
-test.must_contain(test.workpath('stdout.txt'),'article.cls')
+with open('stdout.txt','w') as f:
+    f.write('\n'.join(result))
 
 # Local Variables:
 # # tab-width:4
 # # indent-tabs-mode:nil
 # # End:
-# vim: set syntax=python expandtab tabstop=4 shiftwidth=4:
+# vim: set syntax=scons expandtab tabstop=4 shiftwidth=4:

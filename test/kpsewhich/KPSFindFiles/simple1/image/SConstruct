@@ -21,11 +21,10 @@
 
 import os
 env = Environment(ENV = os.environ, tools = ['kpsewhich'])
-result = env.KPSFindAllFiles('article.cls')
+result = env.KPSFindFiles('article.cls')
 
-f = open('stdout.txt','w')
-f.write('\n'.join(result))
-f.close()
+with open('stdout.txt','w') as f:
+    f.write('\n'.join(result))
 
 # Local Variables:
 # # tab-width:4

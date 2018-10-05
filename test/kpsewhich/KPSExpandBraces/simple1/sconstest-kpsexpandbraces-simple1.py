@@ -30,7 +30,7 @@ import TestSCons
 test = TestSCons.TestSCons()
 
 test.dir_fixture('image')
-test.file_fixture('../../../../kpsewhich.py', 'site_scons/site_tools/kpsewhich.py')
+test.dir_fixture('../../../../kpsewhich', 'site_scons/site_tools/kpsewhich')
 
 # Normal invocation
 test.run()
