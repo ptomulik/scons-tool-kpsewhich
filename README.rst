@@ -34,14 +34,14 @@ Find all occurrences of ``unicode.sty`` file in TDS::
     env = Environment(tools = ['kpsewhich'])
     files = env.KPSFindAllFiles('unicode.sty')
 
-Other functions (correspond directly to ``kpsewhich`` function options):: 
+Other functions (correspond directly to ``kpsewhich`` function options)::
 
     texmf = env.KPSExpandBraces('a{b,c}d')# kpsewhich -expand-braces 'a{b,c}d'
     texmf = env.KPSExpandPath('$TEXMF')   # kpsewhich -expand-path '$TEXMF'
     texmf = env.KPSExpandVar('$TEXMF')    # kpsewhich -expand-var '$TEXMF'
     texpath = env.KPSShowPath('tex')      # kpsewhich -show-path 'tex'
     home = env.KPSVarValue('TEXMFHOME')   # kpsewhich -var-value 'TEXMFHOME'
-    
+
 
 
 CONSTRUCTION VARIABLES
@@ -60,7 +60,7 @@ tool. They may be also provided as keyword arguments to ``KPSXxx()`` methods.
  ``KPSVARIABLES``                 (re)define variables for ``kpsewhich``
 ============================== ==============================================
 
-``KPSVARIABLES`` must be a dictionary in form ``{ NAME : VALUE }``, 
+``KPSVARIABLES`` must be a dictionary in form ``{ NAME : VALUE }``,
 for example::
 
   KPSVARIABLES = {"TEXMFHOME" : "/home/ptomulik/texmf"}
@@ -91,13 +91,13 @@ DOWNLOADING TEST FRAMEWORK
 --------------------------
 
 To run tests you will need the `SCons test framework`_. On GNU systems you may
-quickly download it with the script ``bin/download-deps.sh``::
+quickly download it with the script ``bin/downloads.py``::
 
-    bin/download-deps.sh
+    bin/downloads.py
 
 The development tree may be later cleaned-up from the downloaded files by::
 
-    bin/delete-deps.sh
+    bin/downloads.py --clean
 
 The script uses the `mercurial`_ VCS (hg) tools to download latest version.
 
@@ -120,7 +120,7 @@ RUNNING TESTS
 -------------
 
 To run all the tests type::
-  
+
     python runtest.py -a
 
 This requires the presence of the testing framework in the development tree.

@@ -46,6 +46,7 @@ __pycache__
 
 # Testing framework (downloaded from external source)
 /QMTest/
+/testing/
 /runtest.py
 
 # SCons docbook tool
