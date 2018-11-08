@@ -1,6 +1,17 @@
 scons-tool-kpsewhich
 ====================
 
+.. image:: https://badge.fury.io/py/scons-tool-kpsewhich.svg
+    :target: https://badge.fury.io/py/scons-tool-kpsewhich
+    :alt: PyPi package version
+
+.. image:: https://travis-ci.org/ptomulik/scons-tool-kpsewhich.svg?branch=master
+    :target: https://travis-ci.org/ptomulik/scons-tool-kpsewhich
+    :alt: Travis CI build status
+
+.. image:: https://ci.appveyor.com/api/projects/status/github/ptomulik/scons-tool-kpsewhich?svg=true
+    :target: https://ci.appveyor.com/project/ptomulik/scons-tool-kpsewhich
+
 This tool provides `SCons`_ with interface to kpsewhich utility. The kpsewhich
 program is a part of `kpathsea`_ library, which in turn is a part of TeX Live
 distribution. Its purpose is to search within the `TeX directory structure`_
@@ -17,24 +28,83 @@ information from external program.
 INSTALLATION
 ------------
 
-Copy the ``kpsewhich`` directory to your project's ``site_scons/site_tools/``
-(per-project installation) or to ``~/.scons/site_scons/site_tools/`` (per user
-installation). See SCons manual for details about installation of tools.
+There are few ways to install this tool for your project.
+
+From pypi_
+^^^^^^^^^^
+
+This method may be preferable if you build your project under a virtualenv. To
+add kpsewhich tool from pypi_, type (within your wirtualenv):
+
+.. code-block:: shell
+
+   pip install scons-tool-loader scons-tool-kpsewhich
+
+or, if your project uses pipenv_:
+
+.. code-block:: shell
+
+   pipenv install --dev scons-tool-loader scons-tool-kpsewhich
+
+Alternatively, you may add this to your ``Pipfile``
+
+.. code-block::
+
+   [dev-packages]
+   scons-tool-loader = "*"
+   scons-tool-kpsewhich = "*"
+
+
+The tool will be installed as a namespaced package ``sconstool.kpsewhich``
+in project's virtual environment. You may further use scons-tool-loader_
+to load the tool.
+
+As a git submodule
+^^^^^^^^^^^^^^^^^^
+
+#. Create new git repository:
+
+   .. code-block:: shell
+
+      mkdir /tmp/prj && cd /tmp/prj
+      touch README.rst
+      git init
+
+#. Add the `scons-tool-kpsewhich`_ as a submodule:
+
+   .. code-block:: shell
+
+      git submodule add git://github.com/ptomulik/scons-tool-kpsewhich.git site_scons/site_tools/kpsewhich
+
+#. For python 2.x create ``__init__.py`` in ``site_tools`` directory:
+
+   .. code-block:: shell
+
+      touch site_scons/site_tools/__init__.py
+
+   this will allow to directly import ``site_tools.kpsewhich`` (this may be required by other tools).
+
 
 USAGE EXAMPLES
 --------------
 
-Find files ``article.cls`` and ``amsmath.sty`` used by ``latex``::
+Find files ``article.cls`` and ``amsmath.sty`` used by ``latex``:
+
+.. code-block:: python
 
     env = Environment(tools = ['tex', 'kpsewhich'])
     files = env.KPSFindFiles(['article.cls','amsmath.sty'], progname='$LATEX')
 
-Find all occurrences of ``unicode.sty`` file in TDS::
+Find all occurrences of ``unicode.sty`` file in TDS:
+
+.. code-block:: python
 
     env = Environment(tools = ['kpsewhich'])
     files = env.KPSFindAllFiles('unicode.sty')
 
-Other functions (correspond directly to ``kpsewhich`` function options)::
+Other functions (correspond directly to ``kpsewhich`` function options):
+
+.. code-block:: python
 
     texmf = env.KPSExpandBraces('a{b,c}d')# kpsewhich -expand-braces 'a{b,c}d'
     texmf = env.KPSExpandPath('$TEXMF')   # kpsewhich -expand-path '$TEXMF'
@@ -45,7 +115,7 @@ Other functions (correspond directly to ``kpsewhich`` function options)::
 
 
 CONSTRUCTION VARIABLES
-``````````````````````
+----------------------
 
 The following construction variables may be used to configure the ``kpsewhich``
 tool. They may be also provided as keyword arguments to ``KPSXxx()`` methods.
@@ -61,12 +131,14 @@ tool. They may be also provided as keyword arguments to ``KPSXxx()`` methods.
 ============================== ==============================================
 
 ``KPSVARIABLES`` must be a dictionary in form ``{ NAME : VALUE }``,
-for example::
+for example:
+
+.. code-block:: python
 
   KPSVARIABLES = {"TEXMFHOME" : "/home/ptomulik/texmf"}
 
 ARGUMENTS
-`````````
+---------
 
 These arguments are accepted by some ``KPSXxx()`` methods. All the methods accept
 ``progname``. All other arguments are accepted by ``KPSFindFiles`` and
@@ -87,47 +159,9 @@ These arguments are accepted by some ``KPSXxx()`` methods. All the methods accep
 ============================== ==============================================
 
 
-DOWNLOADING TEST FRAMEWORK
---------------------------
-
-To run tests you will need the `SCons test framework`_. On GNU systems you may
-quickly download it with the script ``bin/downloads.py``::
-
-    bin/downloads.py
-
-The development tree may be later cleaned-up from the downloaded files by::
-
-    bin/downloads.py --clean
-
-The script uses the `mercurial`_ VCS (hg) tools to download latest version.
-
-If the above script does not work on your platform download the following files
-from the `SCons test framework`_.
-
- ========================= ==================================================
-  source file/directory                   target file/directory
- ========================= ==================================================
-  ``QMTest/``               ``QMTest/``
- ------------------------- --------------------------------------------------
-  ``runtest.py``            ``runtest.py``
- ========================= ==================================================
-
-All downloaded files are ignored from the repository by ``.gitignore``, so you
-don't have to worry about deleting them before doing commits.
-
-
-RUNNING TESTS
--------------
-
-To run all the tests type::
-
-    python runtest.py -a
-
-This requires the presence of the testing framework in the development tree.
-
 LICENSE
 -------
-Copyright (c) 2013 by Pawel Tomulik
+Copyright (c) 2013-2018 by Pawel Tomulik
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -153,3 +187,8 @@ SOFTWARE
 .. _TeX directory structure: http://tug.org/twg/tds/
 .. _kpathsea: http://tug.org/kpathsea/
 .. _kpathsea manual: http://tug.org/texinfohtml/kpathsea.html
+.. _pipenv: https://pipenv.readthedocs.io/
+.. _pypi: https://pypi.org/
+.. _scons-tool-loader: https://github.com/ptomulik/scons-tool-loader/
+
+.. <!--- vim: set expandtab tabstop=2 shiftwidth=2 syntax=rst: -->

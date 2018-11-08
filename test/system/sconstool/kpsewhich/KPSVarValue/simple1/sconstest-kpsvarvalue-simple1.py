@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2013-2018 by Pawel Tomulik
+# Copyright (c) 2013-2018 by Pawel Tomulik <ptomulik@meil.pw.edu.pl>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,24 +19,37 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
+__docformat__ = "restructuredText"
 
-Import(['env'])
+"""
+TODO: Write documentation
+"""
 
-epydoc = env.Detect(['epydoc'])
-if epydoc:
-    import sys
-    path = ':'.join(sys.path + [str(env.Dir('#/sconstool'))])
-    epydocflags = '-v --html --css grayscale --inheritance listed'
-    epydoccom = 'PYTHONPATH=%s %s -o $TARGET.dir %s %s' \
-            % (path,epydoc,epydocflags, 'kpsewhich')
-    target = ['index.html']
-    source = ['#/sconstool/kpsewhich']
-    api_doc = env.Command(target, source, epydoccom)
-    env.AlwaysBuild(env.Alias('api-doc', api_doc))
-    env.Ignore('.', target)
+import sys
+import TestSCons
+
+if sys.platform == 'win32':
+    test = TestSCons.TestSCons(program='scons.bat', interpreter=None)
+else:
+    test = TestSCons.TestSCons()
+
+test.dir_fixture('image')
+test.subdir(['site_scons'])
+test.subdir(['site_scons', 'site_tools'])
+test.subdir(['site_scons', 'site_tools', 'kpsewhich'])
+test.file_fixture('../../../../../../__init__.py', 'site_scons/site_tools/kpsewhich/__init__.py')
+test.file_fixture('../../../../../../about.py', 'site_scons/site_tools/kpsewhich/about.py')
+
+# Normal invocation
+test.run()
+test.must_exist('stdout.txt')
+test.must_contain('stdout.txt','/T1/OK', 'r')
+test.must_contain('stdout.txt','/T2/OK', 'r')
+
+test.pass_test()
 
 # Local Variables:
 # # tab-width:4
 # # indent-tabs-mode:nil
 # # End:
-# vim: set syntax=scons expandtab tabstop=4 shiftwidth=4:
+# vim: set syntax=python expandtab tabstop=4 shiftwidth=4:
