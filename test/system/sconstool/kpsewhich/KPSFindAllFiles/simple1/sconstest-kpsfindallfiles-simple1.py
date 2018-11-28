@@ -25,20 +25,13 @@ __docformat__ = "restructuredText"
 TODO: Write documentation
 """
 
-import sys
-import TestSCons
+import os
 
-if sys.platform == 'win32':
-    test = TestSCons.TestSCons(program='scons.bat', interpreter=None)
-else:
-    test = TestSCons.TestSCons()
+here = os.path.dirname(__file__)
+preamble = os.path.join(here, '../../../../support/code/test_preamble.py')
+with open(preamble, 'r') as f:
+    exec(f.read())
 
-test.dir_fixture('image')
-test.subdir(['site_scons'])
-test.subdir(['site_scons', 'site_tools'])
-test.subdir(['site_scons', 'site_tools', 'kpsewhich'])
-test.file_fixture('../../../../../../__init__.py', 'site_scons/site_tools/kpsewhich/__init__.py')
-test.file_fixture('../../../../../../about.py', 'site_scons/site_tools/kpsewhich/about.py')
 
 # Normal invocation
 test.run()

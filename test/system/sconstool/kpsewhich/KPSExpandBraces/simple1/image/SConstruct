@@ -19,10 +19,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE
 
-import os
-env = Environment(ENV=os.environ, tools = ['kpsewhich'])
+env = Environment(tools=['ci', 'kpsewhich'])
 
-res = env.KPSExpandBraces('beg{1,$VAR}end', KPSVARIABLES = {'VAR':'2'})
+res = env.KPSExpandBraces('beg{1,$VAR}end', KPSVARIABLES={'VAR':'2'})
 
 with open('stdout.txt','w') as f:
     f.write(res)
