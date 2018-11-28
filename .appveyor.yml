@@ -19,7 +19,7 @@ before_test:
   - python -m pipenv --version
   - python -m pipenv run python --version
   - python -m pipenv run scons --version
-  - kpsewhich -version
+  - "%USERPROFILE%\\TeXLive\\bin\\win32\\kpsewhich -version"
 
 build: off
 
