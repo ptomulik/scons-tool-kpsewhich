@@ -62,12 +62,15 @@ def _kwargs2flags(env, allowed = _missing, **kw):
 def _kpsewhich(env, args, allowed = _missing, **kw):
     """Workhorse for all KPSXxx methods"""
     import SCons.Util
+    import subprocess
     import sys
 
+    kps = env.get('KPSVARIABLES', dict())
+    kps.update(kw.get('KPSVARIABLES', dict()))
+
+    env = env.Override(kw)
     ENV = env.get('ENV', dict())
-    kpsvariables = env.get('KPSVARIABLES', dict())
-    kpsvariables.update(kw.get('KPSVARIABLES', dict()))
-    ENV.update(kpsvariables)
+    ENV.update(kps)
 
     # Workaround for kpsewhich bug - first file is not found when -path is
     # used, this is due to recursive use of non-reentrant functions within
@@ -78,16 +81,19 @@ def _kpsewhich(env, args, allowed = _missing, **kw):
     else:
         prepend = SCons.Util.CLVar([])
 
-    env = env.Override(dict(kw, **{'ENV': ENV}))
-
     flags = _kwargs2flags(env, allowed, **kw)
 
-    cmd = SCons.Util.CLVar(env.subst('$KPSEWHICH')) \
+    exe = env.WhereIs('$KPSEWHICH') or env.subst('$KPSEWHICH')
+    cmd = SCons.Util.CLVar(exe) \
         + SCons.Util.CLVar(env.subst('$KPSEWHICHFLAGS')) \
         + prepend + flags + SCons.Util.CLVar(args)
 
-    # XXX: the possible problem with backtick is that it can ignore exceptions
-    out = env.backtick(cmd).rstrip('\r\n')
+    kw2 = {'env': ENV}
+    if sys.version_info < (3,7):
+        kw2['universal_newlines'] = True
+    else:
+        kw2['text'] = True
+    out = subprocess.check_output(cmd, **kw2).rstrip('\r\n')
 
     if kw.get('_findfiles'):
         out = "\n".join(out.splitlines()[1:])
