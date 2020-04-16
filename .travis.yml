@@ -5,7 +5,9 @@ python:
   - 2.7
   - 3.5
   - 3.6
-  - 3.7-dev
+  - 3.7
+  - 3.8
+  - 3.9-dev
 
 addons:
   apt:
@@ -29,4 +31,4 @@ before_script:
   - which python
 
 script:
-  - python runtest --verbose=2 -e test/system || [[ $? == 2 ]]
+  - TESTCOMMON_PASS_SKIPS=1 python runtest --verbose=2 -e test/system
